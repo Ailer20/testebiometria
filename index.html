@@ -12,36 +12,11 @@
     <div id="presencaLog"></div>
 
     <script>
-        // Simulando um "banco de dados" de usuários (apenas para fins de teste)
-        const usuarios = [
-            { id: 1, nome: 'João Silva', biometria: 'fingerprint123' },
-            { id: 2, nome: 'Maria Oliveira', biometria: 'fingerprint456' },
-            { id: 3, nome: 'Carlos Souza', biometria: 'fingerprint789' }
-        ];
-
         // Função para verificar suporte biométrico usando a WebAuthn API
         async function verificarSuporteBiometria() {
-            if ('credentials' in navigator && 'create' in navigator.credentials) {
-                try {
-                    const publicKey = {
-                        challenge: new Uint8Array(32),
-                        rp: { name: "Empresa XYZ" },
-                        user: {
-                            id: new Uint8Array(16),
-                            name: "usuario@example.com",
-                            displayName: "Usuário"
-                        },
-                        pubKeyCredParams: [{ type: "public-key", alg: -7 }],
-                        timeout: 60000,
-                        attestation: "direct"
-                    };
-                    
-                    await navigator.credentials.create({ publicKey });
-                    return true;
-                } catch (error) {
-                    console.warn('Autenticação biométrica não suportada:', error);
-                    return false;
-                }
+            // Verifica se o navegador suporta a WebAuthn API
+            if ('credentials' in navigator && 'get' in navigator.credentials) {
+                return true;
             }
             return false;
         }
@@ -49,14 +24,22 @@
         // Função para autenticar usando biometria
         async function autenticarBiometria() {
             try {
+                // Opções para solicitar autenticação
                 const publicKeyCredentialRequestOptions = {
-                    challenge: new Uint8Array(32),
+                    challenge: new Uint8Array(32), // Um desafio aleatório gerado pelo servidor
                     timeout: 60000,
-                    allowCredentials: [],
-                    userVerification: "preferred"
+                    allowCredentials: [{
+                        id: new Uint8Array(16),
+                        type: "public-key",
+                        transports: ["internal"] // "internal" para uso de biometria no dispositivo
+                    }],
+                    userVerification: "required" // Garantir autenticação biométrica
                 };
 
-                const assertion = await navigator.credentials.get({ publicKey: publicKeyCredentialRequestOptions });
+                // Solicitar autenticação usando impressão digital
+                const assertion = await navigator.credentials.get({
+                    publicKey: publicKeyCredentialRequestOptions
+                });
 
                 if (assertion) {
                     const horario = new Date().toLocaleString('pt-BR');
