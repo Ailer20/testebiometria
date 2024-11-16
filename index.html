@@ -8,11 +8,86 @@
 <body>
 
     <h1>Registro de Presença</h1>
-    <button id="biometriaBtn">Registrar Presença</button>
-
+    <button id="biometriaBtn">Registrar Presença com Biometria</button>
     <div id="presencaLog"></div>
 
-    <!-- Importando o arquivo JavaScript com o atributo defer -->
-    <script src="script.js" defer></script>
+    <script>
+        // Simulando um "banco de dados" de usuários (apenas para fins de teste)
+        const usuarios = [
+            { id: 1, nome: 'João Silva', biometria: 'fingerprint123' },
+            { id: 2, nome: 'Maria Oliveira', biometria: 'fingerprint456' },
+            { id: 3, nome: 'Carlos Souza', biometria: 'fingerprint789' }
+        ];
+
+        // Função para verificar suporte biométrico usando a WebAuthn API
+        async function verificarSuporteBiometria() {
+            if ('credentials' in navigator && 'create' in navigator.credentials) {
+                try {
+                    const publicKey = {
+                        challenge: new Uint8Array(32),
+                        rp: { name: "Empresa XYZ" },
+                        user: {
+                            id: new Uint8Array(16),
+                            name: "usuario@example.com",
+                            displayName: "Usuário"
+                        },
+                        pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+                        timeout: 60000,
+                        attestation: "direct"
+                    };
+                    
+                    await navigator.credentials.create({ publicKey });
+                    return true;
+                } catch (error) {
+                    console.warn('Autenticação biométrica não suportada:', error);
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        // Função para autenticar usando biometria
+        async function autenticarBiometria() {
+            try {
+                const publicKeyCredentialRequestOptions = {
+                    challenge: new Uint8Array(32),
+                    timeout: 60000,
+                    allowCredentials: [],
+                    userVerification: "preferred"
+                };
+
+                const assertion = await navigator.credentials.get({ publicKey: publicKeyCredentialRequestOptions });
+
+                if (assertion) {
+                    const horario = new Date().toLocaleString('pt-BR');
+                    const presencaLog = document.getElementById('presencaLog');
+                    presencaLog.innerHTML += `<p>Presença registrada às ${horario}</p>`;
+                    alert('Presença registrada com sucesso!');
+                }
+            } catch (error) {
+                console.error('Falha na autenticação biométrica:', error);
+                alert('Autenticação falhou ou foi cancelada.');
+            }
+        }
+
+        // Função chamada ao clicar no botão
+        async function registrarPresenca() {
+            const suporteBiometria = await verificarSuporteBiometria();
+
+            if (suporteBiometria) {
+                console.log('Dispositivo com suporte biométrico detectado');
+                await autenticarBiometria();
+            } else {
+                alert('Este dispositivo não suporta autenticação biométrica.');
+            }
+        }
+
+        // Adiciona o evento ao botão
+        document.addEventListener('DOMContentLoaded', function() {
+            const botao = document.getElementById('biometriaBtn');
+            botao.addEventListener('click', registrarPresenca);
+        });
+    </script>
+
 </body>
 </html>
