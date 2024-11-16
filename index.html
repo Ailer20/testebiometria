@@ -12,50 +12,48 @@
     <div id="presencaLog"></div>
 
     <script>
-        // Função para verificar suporte biométrico usando a WebAuthn API
+        // Função para verificar se o navegador suporta a API WebAuthn
         async function verificarSuporteBiometria() {
-            if ('credentials' in navigator && 'get' in navigator.credentials) {
+            if (navigator.credentials && navigator.credentials.get) {
                 return true;
             }
+            alert('Este navegador ou dispositivo não tem suporte para autenticação biométrica.');
             return false;
         }
 
-        // Função para gerar um desafio aleatório
+        // Função para gerar um desafio aleatório (usado para criar e autenticar credenciais)
         function gerarDesafio() {
             const desafio = new Uint8Array(32);
             window.crypto.getRandomValues(desafio);
             return desafio;
         }
 
-        // Função para criar credenciais biométricas
+        // Função para criar credenciais biométricas (caso não existam)
         async function criarCredenciais() {
             try {
-                // Gerar um desafio e opções de criação
                 const publicKeyCredentialCreationOptions = {
                     challenge: gerarDesafio(),
                     rp: {
                         name: "Presença com Biometria"
                     },
                     user: {
-                        id: new TextEncoder().encode("usuario_1"), // ID do usuário, geralmente é um ID único
+                        id: new TextEncoder().encode("usuario_1"), // ID do usuário (pode ser um ID único)
                         name: "Aluno Teste",
                         displayName: "Aluno Teste"
                     },
                     pubKeyCredParams: [{
                         type: "public-key",
-                        alg: -7 // Algoritmo de assinatura (algoritmo de ECDSA)
+                        alg: -7 // Algoritmo ECDSA
                     }],
                     timeout: 60000,
                     attestation: "direct"
                 };
 
-                // Registrar credenciais biométricas
                 const credencial = await navigator.credentials.create({
                     publicKey: publicKeyCredentialCreationOptions
                 });
 
                 console.log("Credencial criada com sucesso:", credencial);
-
                 alert('Credenciais biométricas criadas com sucesso!');
             } catch (error) {
                 console.error('Erro ao criar credenciais biométricas:', error);
@@ -63,16 +61,15 @@
             }
         }
 
-        // Função para autenticar biometria
+        // Função para autenticar a biometria
         async function autenticarBiometria() {
             try {
                 const publicKeyCredentialRequestOptions = {
                     challenge: gerarDesafio(),
                     timeout: 60000,
-                    userVerification: "required" // Força a verificação biométrica
+                    userVerification: "required" // Exige que a autenticação seja feita com biometria
                 };
 
-                // Solicitar autenticação usando WebAuthn API
                 const assertion = await navigator.credentials.get({
                     publicKey: publicKeyCredentialRequestOptions
                 });
@@ -91,23 +88,29 @@
 
         // Função chamada ao clicar no botão
         async function registrarPresenca() {
+            // Verifica se o dispositivo tem suporte a biometria
             const suporteBiometria = await verificarSuporteBiometria();
 
             if (suporteBiometria) {
                 console.log('Dispositivo com suporte biométrico detectado');
-                
-                // Verifique se o dispositivo tem credenciais biométricas cadastradas
-                const credenciais = await navigator.credentials.get({ publicKey: {} });
 
-                if (credenciais) {
-                    // Se já houver credenciais, apenas autentica
-                    await autenticarBiometria();
-                } else {
-                    // Caso não haja credenciais, cria novas
-                    await criarCredenciais();
+                // Tentamos obter credenciais registradas
+                try {
+                    const credenciais = await navigator.credentials.get({ publicKey: {} });
+
+                    if (credenciais) {
+                        console.log("Credenciais existentes encontradas");
+                        // Se houver credenciais registradas, fazemos a autenticação
+                        await autenticarBiometria();
+                    } else {
+                        console.log("Nenhuma credencial existente encontrada, criando novas...");
+                        // Se não houver credenciais, criamos novas
+                        await criarCredenciais();
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar credenciais existentes:', error);
+                    alert('Falha ao verificar credenciais biométricas.');
                 }
-            } else {
-                alert('Este dispositivo não suporta autenticação biométrica.');
             }
         }
 
@@ -120,3 +123,4 @@
 
 </body>
 </html>
+
