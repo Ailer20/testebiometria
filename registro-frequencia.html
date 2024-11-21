@@ -1,0 +1,728 @@
+<html><head><base href="." />
+  <style>
+  :root {
+    --primary: #2962ff;
+    --primary-dark: #1c44b2;
+    --background: #f3f6fd;
+    --text: #1a237e;
+    --white: #ffffff;
+    --accent: #00c4ff;
+    --error: #ff3d00;
+    --success: #00c853;
+    --warning: #ffd600;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  body {
+    background: linear-gradient(135deg, #f3f6fd 0%, #e5eeff 100%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 250px;
+    background: var(--white);
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    z-index: 100;
+  }
+  
+  .logo {
+    text-align: center;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--background);
+  }
+  
+  .logo h1 {
+    font-size: 1.5rem;
+    color: var(--primary);
+  }
+  
+  .menu-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .menu-item:hover {
+    background: var(--background);
+    transform: translateX(5px);
+  }
+  
+  .menu-item.active {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    color: var(--white);
+  }
+  
+  .menu-item i {
+    width: 20px;
+    text-align: center;
+  }
+  
+  .container {
+    margin-left: 250px;
+    max-width: calc(1200px + 250px);
+    padding: 20px;
+    min-height: 100vh;
+  }
+  
+  .dashboard-container {
+    width: 100%;
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    padding: 30px;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    border-radius: 15px;
+    color: var(--white);
+    margin-bottom: 30px;
+  }
+  
+  .user-avatar {
+    width: 50px;
+    height: 50px;
+    background: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+  }
+  
+  .user-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  
+  .user-info p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+  
+  .user-actions {
+    margin-left: auto;
+  }
+  
+  .user-actions button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .user-actions button:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  .dashboard-header {
+    text-align: center;
+    margin-bottom: 35px;
+    position: relative;
+  }
+  
+  .dashboard-header h2 {
+    color: var(--text);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .stat-card {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    padding: 20px;
+    border-radius: 15px;
+    color: var(--white);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 10px 0;
+  }
+  
+  .stat-label {
+    font-size: 1rem;
+    opacity: 0.9;
+  }
+  
+  .student-list {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  
+  .student-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--background);
+  }
+  
+  .student-list-header h3 {
+    font-size: 1.2rem;
+    color: var(--text);
+  }
+  
+  .student-search {
+    position: relative;
+    width: 300px;
+  }
+  
+  .student-search input {
+    width: 100%;
+    padding: 10px 35px 10px 15px;
+    border: 2px solid var(--background);
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+  
+  .student-search i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text);
+    opacity: 0.5;
+  }
+  
+  .student-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .student-table th,
+  .student-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--background);
+  }
+  
+  .student-table th {
+    font-weight: 600;
+    color: var(--text);
+    background: var(--background);
+  }
+  
+  .student-status {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  .status-present {
+    background: rgba(0, 200, 83, 0.1);
+    color: var(--success);
+  }
+  
+  .status-absent {
+    background: rgba(255, 61, 0, 0.1);
+    color: var(--error);
+  }
+  
+  .attendance-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .attendance-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-facial {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    color: var(--white);
+  }
+  
+  .btn-presence {
+    background: var(--success);
+    color: var(--white);
+  }
+  
+  .btn-absence {
+    background: var(--error);
+    color: var(--white);
+  }
+  
+  .attendance-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  
+  .finish-attendance {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    border: none;
+    border-radius: 10px;
+    color: var(--white);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .finish-attendance:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .period-selector select {
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: 2px solid var(--background);
+  font-size: 0.9rem;
+}
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  </head>
+  <body>
+  
+    <div class="sidebar">
+      <div class="logo">
+        <h1>FUCAPI ID</h1>
+      </div>
+      <div class="menu-items">
+        <a href="dashboard.html" class="menu-item">
+          <i class="fas fa-chart-line"></i>
+          Dashboard
+        </a>
+        <a href="registro-frequencia.html" class="menu-item active">
+          <i class="fas fa-clipboard-check"></i>
+          Registro de Frequência
+        </a>
+        <a href="relatorios.html" class="menu-item">
+          <i class="fas fa-file-alt"></i>
+          Relatórios
+        </a>
+        <a href="config.html" class="menu-item">
+          <i class="fas fa-cog"></i>
+          Configurações
+        </a>
+         <a href="ajuda.html" class="menu-item">
+          <i class="fas fa-question-circle"></i>
+          Ajuda/FAQ
+        </a>
+      </div>
+    </div>
+  <div class="container">
+    <div class="dashboard-container">
+      <div class="user-profile">
+        <div class="user-avatar">
+          <i class="fas fa-user-tie fa-lg"></i>
+        </div>
+        <div class="user-info">
+          <h3>Prof. Jhonathas Nunes da Silva</h3>
+          <p>Professor</p>
+        </div>
+        <div class="user-actions">
+          <button onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Sair
+          </button>
+        </div>
+      </div>
+  
+      <div class="dashboard-header">
+        <h2>Monitoramento de Frequência</h2>
+      </div>
+  
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="fas fa-user-check fa-2x"></i>
+          <div class="stat-number">10</div>
+          <div class="stat-label">Alunos Presentes</div>
+        </div>
+        
+        <div class="stat-card">
+          <i class="fas fa-user-times fa-2x"></i>
+          <div class="stat-number">5</div>
+          <div class="stat-label">Alunos Ausentes</div>
+        </div>
+        
+        <div class="stat-card">
+          <i class="fas fa-percentage fa-2x"></i>
+          <div class="stat-number">50%</div>
+          <div class="stat-label">Taxa de Presença</div>
+        </div>
+      </div>
+  
+      <div class="student-list">
+        <div class="student-list-header">
+          <h3>Lista de Alunos</h3>
+          <div class="period-selector" style="margin-right: 500px;">
+          <select id="subjectSelector">
+            <option value="">Selecione a Matéria</option>
+            <option value="pw">Programação Web</option>
+            <option value="bd">Banco de Dados</option>
+            <option value="rc">Redes de Computadores</option>
+            <option value="dm">Desenvolvimento Mobile</option>
+            <option value="si">Segurança da Informação</option>
+          </select>
+        </div>
+          <div class="student-search">
+            <input type="text" placeholder="Buscar aluno...">
+            <i class="fas fa-search"></i>
+          </div>
+        </div>
+  
+        <table class="student-table">
+          <thead>
+            <tr>
+              <th>Matrícula</th>
+              <th>Nome</th>
+              <th>Status</th>
+              <th>Horário</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- ALUNO INICIO -->
+            <tr>
+              <td>214274</td>
+              <td>Arleson Brito</td>
+              <td><span class="student-status status-present">Presente</span></td>
+              <td>08:00</td>
+              <td>
+                <div class="attendance-buttons">
+                  <button class="attendance-btn btn-biometric" title="Registrar por Biometria">
+                    <i class="fas fa-fingerprint"></i>
+                  </button>
+                  <button class="attendance-btn btn-presence" onclick="markAbsent(this)" title="Marcar Presença">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button class="attendance-btn btn-absence" onclick="markAbsent(this)" title="Marcar Falta">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+      <!-- ALUNO FIM -->
+       <!-- ALUNO INICIO -->
+       <tr>
+        <td>180550</td>
+        <td>Amanda Lohanny</td>
+        <td><span class="student-status status-present">Presente</span></td>
+        <td>08:00</td>
+        <td>
+          <div class="attendance-buttons">
+            <button class="attendance-btn btn-biometric" title="Registrar por Biometria">
+              <i class="fas fa-fingerprint"></i>
+            </button>
+            <button class="attendance-btn btn-presence" onclick="markAbsent(this)" title="Marcar Presença">
+              <i class="fas fa-check"></i>
+            </button>
+            <button class="attendance-btn btn-absence" onclick="markAbsent(this)" title="Marcar Falta">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+<!-- ALUNO FIM -->
+ <!-- ALUNO INICIO -->
+ <tr>
+  <td>253147</td>
+  <td>Ryan Santos</td>
+  <td><span class="student-status status-absent">Ausente</span></td>
+  <td>--:--</td>
+  <td>
+    <div class="attendance-buttons">
+      <button class="attendance-btn btn-biometric" title="Registrar por Biometria">
+        <i class="fas fa-fingerprint"></i>
+      </button>
+      <button class="attendance-btn btn-presence" onclick="markAbsent(this)" title="Marcar Presença">
+        <i class="fas fa-check"></i>
+      </button>
+      <button class="attendance-btn btn-absence" onclick="markAbsent(this)" title="Marcar Falta">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </td>
+</tr>
+<!-- ALUNO FIM -->
+ <!-- ALUNO INICIO -->
+ <tr>
+  <td>214286</td>
+  <td>Luiz Guedes</td>
+  <td><span class="student-status status-present">Presente</span></td>
+  <td>08:00</td>
+  <td>
+    <div class="attendance-buttons">
+      <button class="attendance-btn btn-biometric" title="Registrar por Biometria">
+        <i class="fas fa-fingerprint"></i>
+      </button>
+      <button class="attendance-btn btn-presence" onclick="markAbsent(this)" title="Marcar Presença">
+        <i class="fas fa-check"></i>
+      </button>
+      <button class="attendance-btn btn-absence" onclick="markAbsent(this)" title="Marcar Falta">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </td>
+</tr>
+<!-- ALUNO FIM -->
+ <!-- ALUNO INICIO -->
+ <tr>
+  <td>253147</td>
+  <td>Erick Wagner</td>
+  <td><span class="student-status status-absent">Ausente</span></td>
+  <td>--:--</td>
+  <td>
+    <div class="attendance-buttons">
+      <button class="attendance-btn btn-biometric" title="Registrar por Biometria">
+        <i class="fas fa-fingerprint"></i>
+      </button>
+      <button class="attendance-btn btn-presence" onclick="markAbsent(this)" title="Marcar Presença">
+        <i class="fas fa-check"></i>
+      </button>
+      <button class="attendance-btn btn-absence" onclick="markAbsent(this)" title="Marcar Falta">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </td>
+</tr>
+<!-- ALUNO FIM -->
+  <!-- ALUNO INICIO -->
+  <tr>
+    <td>214101</td>
+    <td>João Ausier</td>
+    <td><span class="student-status status-absent">Ausente</span></td>
+    <td>--:--</td>
+    <td>
+      <div class="attendance-buttons">
+        <button class="attendance-btn btn-biometric" title="Registrar por Biometria">
+          <i class="fas fa-fingerprint"></i>
+        </button>
+        <button class="attendance-btn btn-presence" onclick="markAbsent(this)" title="Marcar Presença">
+          <i class="fas fa-check"></i>
+        </button>
+        <button class="attendance-btn btn-absence" onclick="markAbsent(this)" title="Marcar Falta">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </td>
+  </tr>
+  <!-- ALUNO FIM -->
+   <!-- ALUNO INICIO -->
+ <tr>
+  <td>214338</td>
+  <td>Guilherme Dantas</td>
+  <td><span class="student-status status-present">Presente</span></td>
+  <td>08:00</td>
+  <td>
+    <div class="attendance-buttons">
+      <button class="attendance-btn btn-biometric" title="Registrar por Biometria">
+        <i class="fas fa-fingerprint"></i>
+      </button>
+      <button class="attendance-btn btn-presence" onclick="markAbsent(this)" title="Marcar Presença">
+        <i class="fas fa-check"></i>
+      </button>
+      <button class="attendance-btn btn-absence" onclick="markAbsent(this)" title="Marcar Falta">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </td>
+</tr>
+<!-- ALUNO FIM -->
+ <!-- ALUNO INICIO -->
+ <tr>
+  <td>182326</td>
+  <td>Ivanilson de Jesus</td>
+  <td><span class="student-status status-present">Presente</span></td>
+  <td>08:00</td>
+  <td>
+    <div class="attendance-buttons">
+      <button class="attendance-btn btn-biometric" title="Registrar por Biometria">
+        <i class="fas fa-fingerprint"></i>
+      </button>
+      <button class="attendance-btn btn-presence" onclick="markAbsent(this)" title="Marcar Presença">
+        <i class="fas fa-check"></i>
+      </button>
+      <button class="attendance-btn btn-absence" onclick="markAbsent(this)" title="Marcar Falta">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </td>
+</tr>
+<!-- ALUNO FIM -->
+ <!-- ALUNO INICIO -->
+ <tr>
+  <td>203727</td>
+  <td>Danyelle Barbosa</td>
+  <td><span class="student-status status-absent">Ausente</span></td>
+  <td>--:--</td>
+  <td>
+    <div class="attendance-buttons">
+      <button class="attendance-btn btn-biometric" title="Registrar por Biometria">
+        <i class="fas fa-fingerprint"></i>
+      </button>
+      <button class="attendance-btn btn-presence" onclick="markAbsent(this)" title="Marcar Presença">
+        <i class="fas fa-check"></i>
+      </button>
+      <button class="attendance-btn btn-absence" onclick="markAbsent(this)" title="Marcar Falta">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </td>
+</tr>
+<!-- ALUNO FIM -->
+ <!-- ALUNO INICIO -->
+ <tr>
+  <td>213744</td>
+  <td>Mateus Henrique</td>
+  <td><span class="student-status status-absent">Ausente</span></td>
+  <td>--:--</td>
+  <td>
+    <div class="attendance-buttons">
+      <button class="attendance-btn btn-biometric" title="Registrar por Biometria">
+        <i class="fas fa-fingerprint"></i>
+      </button>
+      <button class="attendance-btn btn-presence" onclick="markAbsent(this)" title="Marcar Presença">
+        <i class="fas fa-check"></i>
+      </button>
+      <button class="attendance-btn btn-absence" onclick="markAbsent(this)" title="Marcar Falta">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </td>
+</tr>
+<!-- ALUNO FIM -->
+          </tbody>
+        </table>
+        <button class="finish-attendance" onclick="finishAttendance()">
+          <i class="fas fa-check-circle"></i> Finalizar Chamada
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Função de logout
+    function logout() {
+        if (confirm('Deseja realmente sair?')) {
+            window.location.href = '/index.html';
+        }
+    }
+  
+    // Função para marcar como ausente ou presente
+    function markAbsent(button) {
+        const row = button.closest('tr');
+        const statusCell = row.querySelector('.student-status');
+        const timeCell = row.querySelector('td:nth-child(4)');
+        
+        if (statusCell.classList.contains('status-present')) {
+            statusCell.classList.remove('status-present');
+            statusCell.classList.add('status-absent');
+            statusCell.textContent = 'Ausente';
+            timeCell.textContent = '--:--';
+        } else {
+            statusCell.classList.remove('status-absent');
+            statusCell.classList.add('status-present');
+            statusCell.textContent = 'Presente';
+            const now = new Date();
+            timeCell.textContent = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        }
+    }
+  
+    function handleBiometric(button) {
+      const row = button.closest('tr');
+      const studentName = row.querySelector('td:nth-child(2)').textContent;
+  
+      // Exibir mensagem de início
+      alert(`Capturando biometria de ${studentName}...`);
+  
+      // Usando WebAuthn API para autenticação biométrica
+      navigator.credentials.get({
+          publicKey: {
+              challenge: new Uint8Array(32), // Um valor aleatório do servidor
+              allowCredentials: [], // Pode ser preenchido com IDs de credenciais permitidas
+              timeout: 60000,
+              userVerification: "preferred"
+          }
+      }).then((assertion) => {
+          // Sucesso: Atualizar o status
+          alert(`Biometria validada para ${studentName}!`);
+          const statusCell = row.querySelector('.student-status');
+          const timeCell = row.querySelector('td:nth-child(4)');
+          statusCell.classList.remove('status-absent');
+          statusCell.classList.add('status-present');
+          statusCell.textContent = 'Presente';
+          const now = new Date();
+          timeCell.textContent = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      }).catch((error) => {
+          // Erro: Mostrar mensagem ao usuário
+          alert(`Falha na validação biométrica de ${studentName}. Erro: ${error.message}`);
+      });
+  }
+  
+  
+    // Função para finalizar a chamada
+    function finishAttendance() {
+        if (confirm('Deseja finalizar a chamada? Esta ação não poderá ser desfeita.')) {
+            alert('Chamada finalizada com sucesso!');
+            // Aqui você pode enviar os dados da chamada para o servidor
+            window.location.href = '/dashboard.html';
+        }
+    }
+  
+    // Adiciona o evento de clique para os botões de biometria
+    document.querySelectorAll('.btn-biometric').forEach(button => {
+        button.addEventListener('click', () => handleBiometric(button));
+    });
+  </script>
+  </body>
+  </html>

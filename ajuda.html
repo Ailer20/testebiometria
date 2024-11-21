@@ -1,0 +1,589 @@
+<html><head><base href="." />
+    <style>
+    :root {
+      --primary: #2962ff;
+      --primary-dark: #1c44b2;
+      --background: #f3f6fd;
+      --text: #1a237e;
+      --white: #ffffff;
+      --accent: #00c4ff;
+      --error: #ff3d00;
+      --success: #00c853;
+      --warning: #ffd600;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f3f6fd 0%, #e5eeff 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 250px;
+      background: var(--white);
+      box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      z-index: 100;
+    }
+    
+    .logo {
+      text-align: center;
+      padding: 20px 0;
+      margin-bottom: 30px;
+      border-bottom: 2px solid var(--background);
+    }
+    
+    .logo h1 {
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+    
+    .menu-items {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 15px;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .menu-item:hover {
+      background: var(--background);
+      transform: translateX(5px);
+    }
+    
+    .menu-item.active {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: var(--white);
+    }
+    
+    .menu-item i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    .container {
+      margin-left: 250px;
+      max-width: calc(1200px + 250px);
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    .dashboard-container {
+      width: 100%;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      border-radius: 15px;
+      color: var(--white);
+      margin-bottom: 30px;
+    }
+    
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      background: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+    
+    .user-info h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    
+    .user-info p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    .user-actions {
+      margin-left: auto;
+    }
+    
+    .user-actions button {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      color: var(--white);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .user-actions button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: 35px;
+      position: relative;
+    }
+    
+    .dashboard-header h2 {
+      color: var(--text);
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    
+    .faq-search {
+      margin-bottom: 30px;
+    }
+    
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: var(--white);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .search-box i {
+      color: var(--primary);
+      margin-right: 10px;
+    }
+    
+    .search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+    }
+    
+    .faq-section {
+      margin-bottom: 40px;
+      transition: all 0.3s ease;
+    }
+    
+    .faq-section:hover {
+      transform: translateX(5px);
+    }
+    
+    .faq-question {
+      position: relative;
+      padding-right: 30px;
+    }
+    
+    .faq-question:after {
+      content: '+';
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      transition: transform 0.3s ease;
+    }
+    
+    .faq-question.active:after {
+      transform: translateY(-50%) rotate(45deg);
+    }
+    
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .faq-section h3 {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: var(--white);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .faq-section h3 i {
+      margin-right: 10px;
+    }
+    
+    .support-section {
+      background: var(--white);
+      padding: 30px;
+      border-radius: 10px;
+      margin-top: 40px;
+    }
+    
+    .support-section h3 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .support-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    
+    .support-card {
+      text-align: center;
+      padding: 20px;
+      background: var(--background);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    
+    .support-card i {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    
+    .support-card h4 {
+      margin-bottom: 5px;
+    }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body>
+    
+        <div class="sidebar">
+            <div class="logo">
+              <h1>FUCAPI ID</h1>
+            </div>
+            <div class="menu-items">
+              <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                Dashboard
+              </a>
+              <a href="registro-frequencia.html" class="menu-item">
+                <i class="fas fa-clipboard-check"></i>
+                Registro de Frequência
+              </a>
+              <a href="relatorios.html" class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                Relatórios
+              </a>
+              <a href="config.html" class="menu-item">
+                <i class="fas fa-cog"></i>
+                Configurações
+              </a>
+              <a href="ajuda.html" class="menu-item active">
+                <i class="fas fa-question-circle"></i>
+                Ajuda/FAQ
+              </a>
+            </div>
+          </div>
+          
+        <div class="container">
+          <div class="dashboard-container">
+            <div class="user-profile">
+              <div class="user-avatar">
+                <i class="fas fa-user-tie fa-lg"></i>
+              </div>
+              <div class="user-info">
+                <h3>Prof. Jhonathas Nunes da Silva</h3>
+                <p>Professor</p>
+              </div>
+              <div class="user-actions">
+                <button onclick="logout()">
+                  <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+              </div>
+            </div>
+    
+        <div class="dashboard-header">
+          <h2>Ajuda e FAQ</h2>
+        </div>
+    
+        <div class="faq-search">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="faqSearch" placeholder="Buscar nas perguntas frequentes...">
+          </div>
+        </div>
+    
+        <div class="faq-sections">
+          <section id="getting-started" class="faq-section">
+            <h3><i class="fas fa-rocket"></i> Primeiros Passos</h3>
+            <div class="faq-item">
+              <div class="faq-question">Como faço login no sistema?</div>
+              <div class="faq-answer">
+                <p>Para acessar o sistema:</p>
+                <ol>
+                  <li>Acesse a página inicial</li>
+                  <li>Digite seu email institucional</li>
+                  <li>Digite sua senha</li>
+                  <li>Clique em "Entrar"</li>
+                </ol>
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-question">Como alterar minha senha?</div>
+              <div class="faq-answer">
+                <p>Para alterar sua senha:</p>
+                <ol>
+                  <li>Acesse "Configurações" no menu lateral</li>
+                  <li>Clique em "Alterar Senha"</li>
+                  <li>Digite sua senha atual</li>
+                  <li>Digite e confirme sua nova senha</li>
+                  <li>Clique em "Salvar"</li>
+                </ol>
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-question">Como configurar meu perfil?</div>
+              <div class="faq-answer">
+                <p>Para configurar seu perfil:</p>
+                <ol>
+                  <li>Acesse "Configurações"</li>
+                  <li>Atualize suas informações pessoais</li>
+                  <li>Adicione uma foto de perfil</li>
+                  <li>Configure suas preferências de notificação</li>
+                </ol>
+              </div>
+            </div>
+          </section>
+    
+          <section id="attendance" class="faq-section">
+            <h3><i class="fas fa-clipboard-check"></i> Registro de Frequência</h3>
+            <div class="faq-item">
+              <div class="faq-question">Como iniciar o registro de frequência?</div>
+              <div class="faq-answer">
+                <p>Para registrar a frequência:</p>
+                <ol>
+                  <li>Acesse a seção "Registro de Frequência"</li>
+                  <li>Selecione a turma</li>
+                  <li>Clique em "Iniciar Monitoramento"</li>
+                  <li>Escolha entre reconhecimento facial ou biometria</li>
+                </ol>
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-question">Como cadastrar a biometria dos alunos?</div>
+              <div class="faq-answer">
+                <p>Para cadastrar biometria:</p>
+                <ol>
+                  <li>Acesse "Configurações"</li>
+                  <li>Selecione "Gerenciar Biometrias"</li>
+                  <li>Escolha a turma e o aluno</li>
+                  <li>Siga as instruções na tela para cadastrar a digital</li>
+                </ol>
+                <p>Observação: É necessário que cada aluno esteja presente para o cadastro.</p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-question">Como cadastrar foto para reconhecimento facial?</div>
+              <div class="faq-answer">
+                <p>Para cadastrar reconhecimento facial:</p>
+                <ol>
+                  <li>Acesse "Configurações"</li>
+                  <li>Selecione "Gerenciar Reconhecimento Facial"</li>
+                  <li>Escolha o aluno</li>
+                  <li>Capture fotos do rosto em diferentes ângulos</li>
+                  <li>Confirme o cadastro</li>
+                </ol>
+              </div>
+            </div>
+          </section>
+    
+          <section id="reports" class="faq-section">
+            <h3><i class="fas fa-chart-bar"></i> Relatórios</h3>
+            <div class="faq-item">
+              <div class="faq-question">Como exportar relatórios de frequência?</div>
+              <div class="faq-answer">
+                <p>Para exportar relatórios:</p>
+                <ol>
+                  <li>Acesse a seção "Relatórios"</li>
+                  <li>Selecione o período desejado</li>
+                  <li>Escolha a matéria</li>
+                  <li>Clique em "Exportar PDF" ou "Exportar CSV"</li>
+                </ol>
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-question">Como analisar as estatísticas de frequência?</div>
+              <div class="faq-answer">
+                <p>No painel de estatísticas você encontrará:</p>
+                <ul>
+                  <li>Gráficos de frequência por período</li>
+                  <li>Taxa de presença por aluno</li>
+                  <li>Comparativo entre turmas</li>
+                  <li>Tendências de frequência</li>
+                </ul>
+                <p>Dica: Utilize os filtros disponíveis para análises específicas.</p>
+              </div>
+            </div>
+          </section>
+    
+          <section id="troubleshooting" class="faq-section">
+            <h3><i class="fas fa-wrench"></i> Solução de Problemas</h3>
+            <div class="faq-item">
+              <div class="faq-question">O que fazer se o reconhecimento facial não funcionar?</div>
+              <div class="faq-answer">
+                <p>Se o reconhecimento facial não estiver funcionando:</p>
+                <ul>
+                  <li>Verifique a iluminação do ambiente</li>
+                  <li>Certifique-se que a câmera está funcionando</li>
+                  <li>Tente utilizar a biometria como alternativa</li>
+                  <li>Entre em contato com o suporte técnico</li>
+                </ul>
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-question">Problemas com o leitor biométrico?</div>
+              <div class="faq-answer">
+                <p>Soluções comuns:</p>
+                <ul>
+                  <li>Limpe o sensor do leitor</li>
+                  <li>Verifique a conexão USB</li>
+                  <li>Reinicie o computador</li>
+                  <li>Recadastre a digital se necessário</li>
+                </ul>
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-question">Como resolver problemas de exportação de relatórios?</div>
+              <div class="faq-answer">
+                <p>Se houver problemas ao exportar relatórios:</p>
+                <ul>
+                  <li>Verifique sua conexão com a internet</li>
+                  <li>Limpe o cache do navegador</li>
+                  <li>Tente outro formato de exportação</li>
+                  <li>Verifique se há atualizações pendentes</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+    
+          <section id="security" class="faq-section">
+            <h3><i class="fas fa-shield-alt"></i> Segurança e Privacidade</h3>
+            <div class="faq-item">
+              <div class="faq-question">Como os dados são protegidos?</div>
+              <div class="faq-answer">
+                <p>Nosso sistema utiliza:</p>
+                <ul>
+                  <li>Criptografia de ponta a ponta</li>
+                  <li>Armazenamento seguro de dados biométricos</li>
+                  <li>Backup automático</li>
+                  <li>Conformidade com LGPD</li>
+                </ul>
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-question">Políticas de privacidade dos dados</div>
+              <div class="faq-answer">
+                <p>Nossos compromissos:</p>
+                <ul>
+                  <li>Dados usados apenas para controle de frequência</li>
+                  <li>Acesso restrito a pessoas autorizadas</li>
+                  <li>Não compartilhamento com terceiros</li>
+                  <li>Exclusão segura quando solicitado</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        </div>
+    
+        <div class="support-section">
+          <h3>Precisa de mais ajuda?</h3>
+          <div class="support-options">
+            <a href="mailto:kraken.manaus@gmail.com" class="support-card">
+              <i class="fas fa-envelope"></i>
+              <h4>Email de Suporte</h4>
+              <p>kraken.manaus@gmail.com</p>
+            </a>
+            <div class="support-card">
+              <i class="fas fa-phone"></i>
+              <h4>Telefone</h4>
+              <p>(92) 98438-4635</p>
+            </div>
+            <div class="support-card">
+              <i class="fas fa-clock"></i>
+              <h4>Horário de Atendimento</h4>
+              <p>Seg-Sex: 8h às 14h</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const faqQuestions = document.querySelectorAll('.faq-question');
+      
+      faqQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+          const answer = question.nextElementSibling;
+          const isOpen = question.classList.contains('active');
+    
+          // Close all other questions
+          document.querySelectorAll('.faq-question').forEach(q => {
+            q.classList.remove('active');
+            q.nextElementSibling.style.maxHeight = null;
+          });
+    
+          // Toggle current question
+          if (!isOpen) {
+            question.classList.add('active');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+          }
+        });
+      });
+    
+      // Enhance search functionality
+      const searchInput = document.getElementById('faqSearch');
+      const faqSections = document.querySelectorAll('.faq-section');
+    
+      searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+    
+        faqSections.forEach(section => {
+          const questions = section.querySelectorAll('.faq-item');
+          let sectionHasMatch = false;
+    
+          questions.forEach(item => {
+            const question = item.querySelector('.faq-question').textContent.toLowerCase();
+            const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+    
+            if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+              item.style.display = 'block';
+              sectionHasMatch = true;
+            } else {
+              item.style.display = 'none';
+            }
+          });
+    
+          section.style.display = sectionHasMatch ? 'block' : 'none';
+        });
+      });
+    });
+    </script>
+    </body>
+    </html>
